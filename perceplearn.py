@@ -255,8 +255,18 @@ class Perceptron(object):
 				print "Exception raised in getUniqueWords", e
 
 	def train(self):
+		restart = 3
 		for count in range(self.iterations):
-			self.fit(count)
+			if self.fit(count) == False:
+				print "Perceptron converged at [%d] iterations"%count
+				restart -= 1
+				if restart <= 0:
+					break
+			elif restart != 3:
+				print 'Perceptron changed'
+				restart = 3
+			else:
+				pass
 				
 	def getBagOfWords(self, words):
 		word_counter = Counter(words)
@@ -274,9 +284,10 @@ class Perceptron(object):
 		return (self.authenticity_target_value[truthfulness], self.emotion_target_value[emotion])
 	
 	def fit(self, count):
-#         shuffle(self.clean_data)
+		# shuffle(self.clean_data)
+		weights_updated = False
 		for data_point in self.clean_data:
-			try:                
+			try:
 				data_id = data_point['data_id']
 				words = data_point['words']
 				target = data_point['target']
@@ -285,9 +296,10 @@ class Perceptron(object):
 					bow = self.getBagOfWords(words)
 					data_point['bow'] = bow
 				
-				self.updateWeights(bow, target)
+				weights_updated = self.updateWeights(bow, target) or weights_updated
 			except Exception as e:
 				print "Exception raised in fit", e
+		return weights_updated
 				
 	def getClassForReview(self, bow):
 		authenticity, emotion = None, None
@@ -349,15 +361,19 @@ class VanillaPerceptron(Perceptron):
 	def updateWeights(self, bow, target):
 		y = target[0]
 		a = np.sum(np.multiply(self.authenticity_weights, bow)) + self.authenticity_bias
+		changed = False
 		if a * y <= 0:
 			self.authenticity_weights += y * bow
 			self.authenticity_bias += y
+			changed = True
 		
 		y = target[1]
 		a = np.sum(np.multiply(self.emotion_weights, bow)) + self.emotion_bias
 		if a * y <= 0:
 			self.emotion_weights += y * bow
 			self.emotion_bias += y
+			changed = True
+		return changed
 		
 class AveragedPerceptron(Perceptron):
 	def __init__(self, tagged_data, iterations=10):
@@ -368,13 +384,14 @@ class AveragedPerceptron(Perceptron):
 	def updateWeights(self, bow, target):
 		y = target[0]
 		a = np.sum(np.multiply(self.authenticity_weights, bow)) + self.authenticity_bias
+		changed = False
 		if a * y <= 0:
 			self.authenticity_weights += y * bow
 			self.authenticity_bias += y
 			
 			self.authenticity_weights_average += y * bow * self.counter
 			self.authenticity_bias_average += y * self.counter
-		
+			changed = True
 		y = target[1]
 		a = np.sum(np.multiply(self.emotion_weights, bow)) + self.emotion_bias
 		if a * y <= 0:
@@ -383,7 +400,9 @@ class AveragedPerceptron(Perceptron):
 			
 			self.emotion_weights_average += y * bow * self.counter
 			self.emotion_bias_average += y * self.counter
+			changed = True
 		self.counter += 1
+		return changed
 		
 	def initialiseWeights(self):
 		self.emotion_bias_average = 0

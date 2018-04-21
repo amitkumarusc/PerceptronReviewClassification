@@ -154,6 +154,20 @@ class Perceptron(object):
 		else:
 			pass
 			# print "Provide at least model file or training data"
+
+		self.all_weights = np.zeros((self.total_words, 1))
+		self.convergence_count = 10
+
+	def displayPlot(self):
+		return
+		from matplotlib import pyplot as plt
+		num = 100
+		words = []
+		self.all_weights = self.all_weights[:num, :self.convergence_count]
+		plt.pcolor(self.all_weights)
+		# plt.yticks(range(0, num), words, fontsize=4)
+		plt.savefig('plot.png', dpi=1200)
+		# plt.show()
 			
 
 	def loadModelFromFile(self, model_file):
@@ -261,6 +275,7 @@ class Perceptron(object):
 				print "Perceptron converged at [%d] iterations"%count
 				restart -= 1
 				if restart <= 0:
+					self.convergence_count = count
 					break
 			elif restart != 3:
 				print 'Perceptron changed'
@@ -357,6 +372,8 @@ class VanillaPerceptron(Perceptron):
 		Perceptron.__init__(self, tagged_data)
 		self.iterations = iterations
 		self.model_file_name = 'vanillamodel.txt'
+		from matplotlib import pyplot as plt
+		plt.figure(figsize=(16,9))
 		
 	def updateWeights(self, bow, target):
 		y = target[0]
@@ -373,6 +390,15 @@ class VanillaPerceptron(Perceptron):
 			self.emotion_weights += y * bow
 			self.emotion_bias += y
 			changed = True
+
+			from matplotlib import pyplot as plt
+			self.all_weights = self.emotion_weights
+			self.all_weights =  self.all_weights[0,:6794]
+			self.all_weights = self.all_weights.reshape((79, 86))
+			plt.pcolor(self.all_weights)
+			plt.draw()
+			plt.pause(1e-15)
+
 		return changed
 		
 class AveragedPerceptron(Perceptron):
@@ -429,6 +455,7 @@ if __name__ == '__main__':
 	model = VanillaPerceptron(tagged_data, iterations=30)
 	model.train()
 	model.writeModelToFile()
+	model.displayPlot()
 	
 	model = AveragedPerceptron(tagged_data, iterations=30)
 	model.train()

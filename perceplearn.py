@@ -20,7 +20,7 @@ def getFileFromCommandLine():
 
 def clean_sentence(sentence):
 	chars_to_remove = ['~', '`','.', '!', '?', '@', '#', '$', '%',\
-						'^', '&', ',', '(', ')', '-', '_', '+', '*',\
+						'^', '&', ',', '(', ')', '_', '+', '*',\
 						'=', '<', '>', ';', ':', '"', '[', ']', '/',\
 						'\\', '|', '~', '{', '}']
 
@@ -427,14 +427,14 @@ if __name__ == '__main__':
 	# tagged_data = getFileContents('data/train-labeled.txt')
 	# untagged_data = getFileContents('data/dev-text.txt')
 
-	iterations = 11
+	iterations = 15
 	
 	model = VanillaPerceptron(tagged_data, iterations=iterations)
 	model.train()
 	model.writeModelToFile()
-	
-	model = AveragedPerceptron(tagged_data, iterations=iterations)
+
+	model = AveragedPerceptron(tagged_data, iterations=iterations+10)
 	model.train()
 	model.writeModelToFile()
-	
+
 	print "Training Done"

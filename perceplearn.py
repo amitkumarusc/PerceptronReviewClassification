@@ -392,6 +392,7 @@ class AveragedPerceptron(Perceptron):
 			self.authenticity_weights_average += y * bow * self.counter
 			self.authenticity_bias_average += y * self.counter
 			changed = True
+			
 		y = target[1]
 		a = np.sum(np.multiply(self.emotion_weights, bow)) + self.emotion_bias
 		if a * y <= 0:
@@ -425,12 +426,14 @@ if __name__ == '__main__':
 	tagged_data = getFileFromCommandLine()
 	# tagged_data = getFileContents('data/train-labeled.txt')
 	# untagged_data = getFileContents('data/dev-text.txt')
+
+	iterations = 11
 	
-	model = VanillaPerceptron(tagged_data, iterations=30)
+	model = VanillaPerceptron(tagged_data, iterations=iterations)
 	model.train()
 	model.writeModelToFile()
 	
-	model = AveragedPerceptron(tagged_data, iterations=30)
+	model = AveragedPerceptron(tagged_data, iterations=iterations)
 	model.train()
 	model.writeModelToFile()
 	

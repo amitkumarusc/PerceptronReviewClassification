@@ -2,6 +2,7 @@ import os
 import sys
 import operator
 import numpy as np
+import random
 from random import shuffle
 from collections import Counter
 
@@ -45,6 +46,8 @@ def clean_sentence(sentence):
 					'other', 'than', 'their', 'she', 'your', 'too', 'do', 'and',\
 					'hers', 'we', 'there', 'any', 'because', 'about', 'what', 'few',\
 					'his', 't', "didn't", "i'll", "we'll", "i've", "we've", "couldn't", "wasn't"]
+
+	# stop_words += ['aren', 'll', 'didn', 'l', 'doesn', 'weren', 'lets', 'haven']
 
 	# stop_words += ['ourselves','hers','between','yourself','but','again','there','about','once','during','out','very','having','with','they','own','an','be','some','for','do','its','yours','such','into','of','most','itself','other','off','is','s','am','or','who','as','from','him','each','the','themselves','until','below','are','we','these','your','his','through','don','nor','me','were','her','more','himself','this','down','should','our','their','while','above','both','up','to','ours','had','she','all','no','when','at','any','before','them','same','and','been','have','in','will','on','does','yourselves','then','that','because','what','over','why','so','can','did','not','now','under','he','you','herself','has','just','where','too','only','myself','which','those','i','after','few','whom','t','being','if','theirs','my','against','a','by','doing','it','how','further','was','here','tha']
 	stop_words = list(set(stop_words))  
@@ -108,6 +111,7 @@ def give_base_word(word):
 				base_word = base_word[:-1] + 'y'
 
 			elif len(base_word) > 2 and  base_word[-1] == base_word[-2]:
+				# print base_word + 'ed'
 				base_word = base_word[:-1]
 			elif len(base_word) > 2 and  base_word[-1] == 'k' and base_word[-2] == 'c':
 				base_word = base_word[:-1]
@@ -284,6 +288,7 @@ class Perceptron(object):
 		return (self.authenticity_target_value[truthfulness], self.emotion_target_value[emotion])
 	
 	def fit(self, count):
+		# random.seed(234)
 		# shuffle(self.clean_data)
 		weights_updated = False
 		for data_point in self.clean_data:

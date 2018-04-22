@@ -216,6 +216,8 @@ class Perceptron(object):
 		self.authenticity_weights = np.zeros((1, self.total_words))
 		self.emotion_bias = 0
 		self.emotion_weights = np.zeros((1, self.total_words))
+		# random.seed(16)
+		# shuffle(self.clean_data)
 		
 	def splitClassNData(self, line):
 		tokens = line.strip().split()
@@ -262,10 +264,12 @@ class Perceptron(object):
 		restart = 3
 		for count in range(self.iterations):
 			if self.fit(count) == False:
-				print "Perceptron converged at [%d] iterations"%count
-				restart -= 1
+				if self.model_file_name == 'vanillamodel.txt':
+					print "Perceptron converged at [%d] iterations"%count
+					restart -= 1
 				if restart <= 0:
-					break
+					if self.model_file_name == 'vanillamodel.txt':
+						break
 			elif restart != 3:
 				print 'Perceptron changed'
 				restart = 3
@@ -432,8 +436,7 @@ if __name__ == '__main__':
 	# tagged_data = getFileContents('data/train-labeled.txt')
 	# untagged_data = getFileContents('data/dev-text.txt')
 
-	iterations = 15
-	
+	iterations = 90
 	model = VanillaPerceptron(tagged_data, iterations=iterations)
 	model.train()
 	model.writeModelToFile()

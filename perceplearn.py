@@ -7,7 +7,7 @@ from random import shuffle
 from collections import Counter
 
 from matplotlib import pyplot as plt
-plt.figure(figsize=(16,9))
+plt.figure(figsize=(12,7))
 
 SEPERATOR = '****************#################*****************###############\n'
 
@@ -465,7 +465,10 @@ if __name__ == '__main__':
 	model.train()
 	model.writeModelToFile()
 	# model.displayPlot()
+	# words = model.word_to_index.keys()
+	# words.sort()
 	plt.plot(model.authenticity_weights[0])
+	# plt.xticks(range(len(words)), words, rotation='vertical')
 	plt.show()
 
 	model = AveragedPerceptron(tagged_data, iterations=iterations+10)

@@ -93,7 +93,7 @@ def give_base_word(word):
 				else:
 					base_word += 'e'
 
-		elif word.endswith('ly') and len(word) > 10:
+		elif word.endswith('ly') and len(word) > 6:
 			base_word = word[:-2]
 
 		elif word.endswith('ed'):

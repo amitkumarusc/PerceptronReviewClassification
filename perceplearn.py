@@ -26,7 +26,7 @@ def clean_sentence(sentence):
 	chars_to_remove = ['~', '`','.', '!', '?', '@', '#', '$', '%',\
 						'^', '&', ',', '(', ')', '_', '+', '*',\
 						'=', '<', '>', ';', ':', '"', '[', ']', '/',\
-						'\\', '|', '~', '{', '}']
+						'\\', '|', '~', '{', '}', '-']
 
 	chars_to_remove += ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
@@ -397,10 +397,10 @@ class VanillaPerceptron(Perceptron):
 			self.emotion_bias += y
 			changed = True
 
-			from matplotlib import pyplot as plt
-			self.all_weights = self.emotion_weights
-			self.all_weights =  self.all_weights[0,:6794]
-			self.all_weights = self.all_weights.reshape((79, 86))
+			# from matplotlib import pyplot as plt
+			# self.all_weights = self.emotion_weights
+			# self.all_weights =  self.all_weights[0,:6794]
+			# self.all_weights = self.all_weights.reshape((79, 86))
 			# plt.pcolor(self.all_weights)
 			# plt.draw()
 			# plt.pause(1e-15)
@@ -468,6 +468,11 @@ if __name__ == '__main__':
 	# words = model.word_to_index.keys()
 	# words.sort()
 	plt.plot(model.authenticity_weights[0])
+	index = np.argmax(model.authenticity_weights[0])
+	for word in model.word_to_index:
+		if model.word_to_index[word] == index:
+			print word
+			break
 	# plt.xticks(range(len(words)), words, rotation='vertical')
 	plt.show()
 

@@ -176,9 +176,13 @@ class Perceptron(object):
 				continue
 				
 			if switch == 0:
-				word, index = line.strip().split('\t')
-				index = int(index)
-				self.word_to_index[word] = index
+				try:
+					word, index = line.strip().split('\t')
+					index = int(index)
+					self.word_to_index[word] = index
+				except:
+					self.word_to_index['ABC'] = 0
+					print "Exception raised in reading word"
 				
 			if switch == 1:
 				try:
